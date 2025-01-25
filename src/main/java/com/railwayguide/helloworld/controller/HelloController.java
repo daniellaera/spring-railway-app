@@ -25,14 +25,4 @@ public class HelloController {
     public String test() {
         return "test";
     }
-
-    @GetMapping("/draft")
-    public String draft() {
-        return "draft";
-    }
-
-    @GetMapping("/stuff")
-    public String stuff() {
-        return "stuff";
-    }
 }
