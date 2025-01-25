@@ -35,10 +35,13 @@ jobs:
             }
           branch_name: ${{ github.head_ref }}
 
+      - name: Install Railway CLI
+        run: |
+          curl -sSL https://github.com/railwayapp/cli/releases/latest/download/install.sh | sh
+
       - name: Trigger deployment manually with Railway CLI
         if: always() # Ensure this runs regardless of success/failure in previous steps
         run: |
-          curl -fsSL https://railway.app/install | sh # Install Railway CLI if not already installed
           railway login --token ${{ secrets.RAILWAY_API_TOKEN }}
           railway up --project-id ${{ secrets.RAILWAY_PROJECT_ID }}
 
