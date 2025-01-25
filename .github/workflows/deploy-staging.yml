@@ -22,9 +22,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Railway CLI
+      - name: Install the new Railway CLI
         run: |
-          npm install -g railway
+          npm install -g @railway/cli
 
       - name: Verify Railway CLI Installation
         run: |
