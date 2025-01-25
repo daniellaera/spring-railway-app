@@ -22,6 +22,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install Railway CLI
+        run: |
+          curl -fsSL https://github.com/railwayapp/cli/releases/latest/download/install.sh | bash
+
+      - name: Verify Railway CLI Installation
+        run: |
+          railway --version  # Verify that the Railway CLI is installed properly
+
       - name: Deploy to Railway
         uses: ayungavis/railway-preview-deploy@v1.0.2
         with:
@@ -35,12 +43,7 @@ jobs:
             }
           branch_name: ${{ github.head_ref }}
 
-      - name: Install Railway CLI
-        run: |
-          curl -sSL https://github.com/railwayapp/cli/releases/latest/download/install.sh | sh
-
       - name: Trigger deployment manually with Railway CLI
-        if: always() # Ensure this runs regardless of success/failure in previous steps
         run: |
           railway login --token ${{ secrets.RAILWAY_API_TOKEN }}
           railway up --project-id ${{ secrets.RAILWAY_PROJECT_ID }}
