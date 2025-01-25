@@ -19,4 +19,4 @@ jobs:
           environment_name: 'staging'
           preview_environment_name: 'pr-${{ github.event.pull_request.number }}'
           branch_name: ${{ github.head_ref }}
-          cleanup: 'true'
+          cleanup: 'false'
