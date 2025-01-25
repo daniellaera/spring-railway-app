@@ -24,7 +24,7 @@ jobs:
 
       - name: Install Railway CLI
         run: |
-          curl -fsSL https://github.com/railwayapp/cli/releases/latest/download/install.sh | bash
+          npm install -g railway
 
       - name: Verify Railway CLI Installation
         run: |
