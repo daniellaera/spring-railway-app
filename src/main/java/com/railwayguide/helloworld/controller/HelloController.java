@@ -15,4 +15,19 @@ public class HelloController {
     public String world() {
         return "Hello World";
     }
+
+    @GetMapping("/hello")
+    public String helloworld() {
+        return "Hello my friend";
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        return "test";
+    }
+
+    @GetMapping("/draft")
+    public String draft() {
+        return "draft";
+    }
 }
