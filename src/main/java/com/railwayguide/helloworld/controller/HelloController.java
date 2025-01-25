@@ -30,4 +30,9 @@ public class HelloController {
     public String draft() {
         return "draft";
     }
+
+    @GetMapping("/stuff")
+    public String stuff() {
+        return "stuff";
+    }
 }
