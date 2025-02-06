@@ -25,4 +25,9 @@ public class HelloController {
     public String test() {
         return "test";
     }
+
+    @GetMapping("/caffeine")
+    public String caffeine() {
+        return "caffeine";
+    }
 }
