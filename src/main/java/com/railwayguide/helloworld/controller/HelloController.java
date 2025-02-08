@@ -40,4 +40,9 @@ public class HelloController {
     public String jeez() {
         return "jeez";
     }
+
+    @GetMapping("/testify")
+    public String testify() {
+        return "testify";
+    }
 }
