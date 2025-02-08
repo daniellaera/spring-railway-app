@@ -30,4 +30,9 @@ public class HelloController {
     public String caffeine() {
         return "caffeine";
     }
+
+    @GetMapping("/coding")
+    public String coding() {
+        return "coding";
+    }
 }
