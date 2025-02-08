@@ -31,6 +31,11 @@ public class HelloController {
         return "caffeine";
     }
 
+    @GetMapping("/roasted")
+    public String roasted() {
+        return "roasted";
+    }
+
     @GetMapping("/coding")
     public String coding() {
         return "coding";
