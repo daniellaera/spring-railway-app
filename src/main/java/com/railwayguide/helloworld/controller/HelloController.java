@@ -60,4 +60,9 @@ public class HelloController {
     public String pizza() {
         return "pizza + roastbeef";
     }
+
+    @GetMapping("/panini")
+    public String panini() {
+        return "panini";
+    }
 }
