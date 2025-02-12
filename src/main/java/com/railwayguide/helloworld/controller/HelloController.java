@@ -65,4 +65,9 @@ public class HelloController {
     public String panini() {
         return "panini";
     }
+
+    @GetMapping("/mayo")
+    public String mayo() {
+        return "mayo + ketchup";
+    }
 }
