@@ -50,4 +50,9 @@ public class HelloController {
     public String testify() {
         return "testify";
     }
+
+    @GetMapping("/kebab")
+    public String kebab() {
+        return "kebab + pizza";
+    }
 }
