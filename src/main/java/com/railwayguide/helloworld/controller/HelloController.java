@@ -25,4 +25,39 @@ public class HelloController {
     public String test() {
         return "test";
     }
+
+    @GetMapping("/caffeine")
+    public String caffeine() {
+        return "caffeine";
+    }
+
+    @GetMapping("/roasted")
+    public String roasted() {
+        return "roasted";
+    }
+
+    @GetMapping("/coding")
+    public String coding() {
+        return "coding";
+    }
+
+    @GetMapping("/jeez")
+    public String jeez() {
+        return "jeez";
+    }
+
+    @GetMapping("/testify")
+    public String testify() {
+        return "testify";
+    }
+
+    @GetMapping("/kebab")
+    public String kebab() {
+        return "kebab + pizza";
+    }
+
+    @GetMapping("/pizza")
+    public String pizza() {
+        return "pizza + roastbeef";
+    }
 }
