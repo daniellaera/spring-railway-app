@@ -55,4 +55,9 @@ public class HelloController {
     public String kebab() {
         return "kebab + pizza";
     }
+
+    @GetMapping("/pizza")
+    public String pizza() {
+        return "pizza + roastbeef";
+    }
 }
