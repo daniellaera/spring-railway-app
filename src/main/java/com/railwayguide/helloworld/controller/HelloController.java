@@ -70,4 +70,9 @@ public class HelloController {
     public String mayo() {
         return "mayo + ketchup";
     }
+
+    @GetMapping("/mustard")
+    public String mustard() {
+        return "mustard + mustard";
+    }
 }
