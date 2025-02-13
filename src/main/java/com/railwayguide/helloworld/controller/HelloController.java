@@ -75,4 +75,9 @@ public class HelloController {
     public String mustard() {
         return "mustard + mustard";
     }
+
+    @GetMapping("/omelette")
+    public String omelette() {
+        return "omelette";
+    }
 }
