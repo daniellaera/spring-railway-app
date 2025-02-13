@@ -5,15 +5,14 @@ on:
     types: [opened, synchronize, reopened, closed]
 
 jobs:
-  deploy:
+  deploy_preview:
     runs-on: ubuntu-latest
     if: ${{ github.event.action != 'closed' }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy to Railway
+      - name: Deploy to Railway (Preview Environment)
         uses: ayungavis/railway-preview-deploy@v1.0.2
         with:
           railway_api_token: ${{ secrets.RAILWAY_TOKEN }}
@@ -22,71 +21,9 @@ jobs:
           preview_environment_name: 'pr-${{ github.event.pull_request.number }}'
           branch_name: ${{ github.head_ref }}
 
-      - name: Post deployment info
-        run:
-          echo "Preview deployed at ${{ steps.deploy.outputs.service_domain }}"
-
-      - name: Post or update deployment comment
-        if: ${{ steps.test-action.outputs.service_domain != '' }}
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const marker = '<!-- preview-comment -->'; // Unique marker to identify the comment
-            const { data: commits } = await github.rest.pulls.listCommits({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.issue.number,
-              per_page: 100 
-            });
-            const latestCommit = commits[commits.length - 1];
-            const latestCommitSha = latestCommit.sha.substring(0, 7);
-            const latestCommitAuthor = latestCommit.commit.author.name;
-
-
-            const { data: comments } = await github.rest.issues.listComments({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            });
-
-            const body = `
-              ${marker}  <!-- This marker helps identify the comment for future updates -->
-              🚀 **Deployment success!**
-
-              - \`web\` deployed at [${{ steps.test-action.outputs.service_domain }}](https://${{ steps.test-action.outputs.service_domain }})
-
-              ---
-
-              *commit: ${latestCommitSha}*  
-              *author: ${latestCommitAuthor}* 
-            `;
-
-            const existingComment = comments.find(comment => comment.body.includes(marker));
-
-            if (existingComment) {
-              await github.rest.issues.updateComment({
-                comment_id: existingComment.id,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: body
-              });
-              core.info(`Updated comment ID: ${existingComment.id}`);
-            } else {
-              await github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: body
-              });
-              core.info('Created a new comment');
-            }
-
-  cleanup:
+  cleanup_preview:
     runs-on: ubuntu-latest
-    if:
-      ${{ github.event.pull_request.merged == true || github.event.action ==
-      'closed' }}
-
+    if: ${{ github.event.pull_request.merged == true || github.event.action == 'closed' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -96,7 +33,40 @@ jobs:
         with:
           railway_api_token: ${{ secrets.RAILWAY_TOKEN }}
           project_id: ${{ secrets.RAILWAY_PROJECT_ID }}
-          environment_name: production
+          environment_name: 'staging'  # Specify the environment to target for cleanup
           preview_environment_name: 'pr-${{ github.event.pull_request.number }}'
           branch_name: ${{ github.head_ref }}
           cleanup: 'true'
+
+  deploy_staging:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == true }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Railway (Staging)
+        uses: ayungavis/railway-preview-deploy@v1.0.2
+        with:
+          railway_api_token: ${{ secrets.RAILWAY_TOKEN }}
+          project_id: ${{ secrets.RAILWAY_PROJECT_ID }}
+          environment_name: 'staging'
+          branch_name: ${{ github.head_ref }}  # Use the PR branch name or default branch name if needed
+          preview_environment_name: 'staging'  # You can use 'staging' or another descriptive name here
+
+  deploy_production:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == true }}
+    needs: deploy_staging
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Railway (Production)
+        uses: ayungavis/railway-preview-deploy@v1.0.2
+        with:
+          railway_api_token: ${{ secrets.RAILWAY_TOKEN }}
+          project_id: ${{ secrets.RAILWAY_PROJECT_ID }}
+          environment_name: 'production'
+          branch_name: 'main'  # Use the main branch or another branch used for production
+          preview_environment_name: 'production'  # Use a meaningful, descriptive name
